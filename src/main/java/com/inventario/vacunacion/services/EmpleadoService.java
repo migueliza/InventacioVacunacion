@@ -16,4 +16,6 @@ public interface EmpleadoService {
 	
 	public SalidaServicio actualizarEmpleado(EmpleadoDTO empleado);
 	
+	public SalidaServicio eliminarEmpleado(String empleadoId);
+	
 }

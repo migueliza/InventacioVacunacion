@@ -1,5 +1,6 @@
 package com.inventario.vacunacion.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,8 @@ import com.inventario.vacunacion.services.EmpleadoService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/inventario-vacunacion")
@@ -49,5 +52,17 @@ public class EmpleadoController {
 		return salida;
 		
 	}
+	
+	@DeleteMapping("/empleados/{empleadoId}")
+	public ResponseEntity<HttpStatus> eliminarEmpleado(@PathVariable String empleadoId){
+		
+		try {
+		this.empleadoService.eliminarEmpleado(empleadoId);
+		return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 
 }

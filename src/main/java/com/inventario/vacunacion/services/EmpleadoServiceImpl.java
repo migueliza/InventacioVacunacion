@@ -225,4 +225,21 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
 		return entrada.matches("[A-Za-z]*");
 	}
+
+	@Override
+	public SalidaServicio eliminarEmpleado(String empleadoId) {
+		SalidaServicio salida = new SalidaServicio();
+		
+		try{
+		
+		Optional<Empleado> e = empleadoDao.findById(Integer.valueOf(empleadoId));
+		empleadoDao.delete(e.get());
+		
+		}catch(Exception e) {
+			salida.setMensajeSalida(e.getMessage());
+			return salida;
+		}
+		salida.setMensajeSalida("OK");
+		return salida;
+	}
 }
