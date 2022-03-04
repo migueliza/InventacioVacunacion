@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.inventario.vacunacion.dto.EmpleadoDTO;
 import com.inventario.vacunacion.dto.SalidaServicio;
-import com.inventario.vacunacion.modelo.Empleado;
 import com.inventario.vacunacion.services.EmpleadoService;
 
 
@@ -37,7 +36,7 @@ public class EmpleadoController {
 	}
 
 	@PostMapping("/empleados")
-	public SalidaServicio addEmpleado(@RequestBody Empleado empleado) throws Exception{
+	public SalidaServicio addEmpleado(@RequestBody EmpleadoDTO empleado) throws Exception{
 		return this.empleadoService.agregarEmpleado(empleado);
 	}
 

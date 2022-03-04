@@ -65,9 +65,17 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 	}
 
 	@Override
-	public SalidaServicio agregarEmpleado(Empleado empleado) throws Exception {
+	public SalidaServicio agregarEmpleado(EmpleadoDTO empleado) throws Exception {
 
+		Optional<Catalogo> cata = null;
 		SalidaServicio salida = new SalidaServicio();
+		
+		try {
+		if (empleado.getEstadoVacuna() != null && empleado.getEstadoVacuna() != "") {
+			cata  = catalogoDao.findById(Integer.valueOf(empleado.getEstadoVacuna()));
+			}
+		
+		
 		try {
 			if (empleado.getCedula().equals("") || empleado.getNombres().equals("")
 					|| empleado.getApellidos().equals("") || empleado.getCorreoElectronico().equals("")) {
@@ -96,8 +104,27 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 			salida.setMensajeSalida(e.getMessage());
 			return salida;
 		}
-		empleadoDao.save(empleado);
+		
+		Empleado emp = new Empleado();
+		emp.setApellidos(empleado.getApellidos());
+		emp.setCedula(empleado.getCedula());
+		emp.setCorreoElectronico(empleado.getCorreoElectronico());
+		emp.setNombres(empleado.getNombres());
+		
+		if(cata != null) {
+		emp.setCatalogo(cata.get());
+		}
+		emp.setDireccionDomicilio(empleado.getDireccionDomicilio());
+		emp.setFechaNacimiento(empleado.getFechaNacimiento());
+		emp.setTelefonoMovil(empleado.getTelefonoMovil());
+		
+		
+		empleadoDao.save(emp);
 		salida.setMensajeSalida("OK");
+		} catch (Exception e) {
+			salida.setMensajeSalida(e.getCause().toString());
+			return salida;
+		}
 		return salida;
 	}
 
