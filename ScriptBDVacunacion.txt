@@ -1,0 +1,117 @@
+-- Database: vacunacion
+
+-- DROP DATABASE IF EXISTS vacunacion;
+
+CREATE DATABASE vacunacion
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Spanish_Ecuador.1252'
+    LC_CTYPE = 'Spanish_Ecuador.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+COMMENT ON DATABASE vacunacion
+    IS 'lleva registro del estadode vacunacion de los empleados';
+
+
+
+
+
+-- Table: public.catalogo
+
+-- DROP TABLE IF EXISTS public.catalogo;
+
+CREATE TABLE IF NOT EXISTS public.catalogo
+(
+    id integer NOT NULL DEFAULT nextval('catalogo_id_seq'::regclass),
+    codigo character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    descripcion character varying(70) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT catalogo_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.catalogo
+    OWNER to postgres;
+
+
+
+
+
+-- Table: public.empleado
+
+-- DROP TABLE IF EXISTS public.empleado;
+
+CREATE TABLE IF NOT EXISTS public.empleado
+(
+    id integer NOT NULL DEFAULT nextval('empleado_id_seq'::regclass),
+    cedula character(10) COLLATE pg_catalog."default" NOT NULL,
+    nombres character varying(70) COLLATE pg_catalog."default" NOT NULL,
+    apellidos character varying(70) COLLATE pg_catalog."default" NOT NULL,
+    correo_electronico character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    fecha_nacimiento date,
+    direccion_domicilio character varying(100) COLLATE pg_catalog."default",
+    telefono_movil character varying(15) COLLATE pg_catalog."default",
+    estado_vacuna integer,
+    CONSTRAINT empleado_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_catalogo FOREIGN KEY (estado_vacuna)
+        REFERENCES public.catalogo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.empleado
+    OWNER to postgres;
+
+
+
+
+-- Table: public.usuario
+
+-- DROP TABLE IF EXISTS public.usuario;
+
+CREATE TABLE IF NOT EXISTS public.usuario
+(
+    id integer NOT NULL DEFAULT nextval('usuario_id_seq'::regclass),
+    usuario character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    clave character varying(70) COLLATE pg_catalog."default" NOT NULL,
+    id_empleado integer,
+    CONSTRAINT usuario_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_empleado FOREIGN KEY (id_empleado)
+        REFERENCES public.empleado (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.usuario
+    OWNER to postgres;
+
+
+
+-- Table: public.vacuna
+
+-- DROP TABLE IF EXISTS public.vacuna;
+
+CREATE TABLE IF NOT EXISTS public.vacuna
+(
+    id integer NOT NULL DEFAULT nextval('vacuna_id_seq'::regclass),
+    tipo character varying(70) COLLATE pg_catalog."default" NOT NULL,
+    fecha_vacunacion date NOT NULL,
+    numero_dosis integer,
+    id_empleado integer,
+    CONSTRAINT vacuna_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_empleado FOREIGN KEY (id_empleado)
+        REFERENCES public.empleado (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.vacuna
+    OWNER to postgres;
